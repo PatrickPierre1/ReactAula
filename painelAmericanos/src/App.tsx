@@ -1,12 +1,13 @@
 import styles from "./styles/global.module.css";
 import { NewComponent } from './components/NewComponent';
+import { Rotas } from "./routes";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
   return (
     <>
-      <h1 className={styles.title}>Hello world</h1>
-      <NewComponent/>
+        <Rotas/>
     </>
   )
 }

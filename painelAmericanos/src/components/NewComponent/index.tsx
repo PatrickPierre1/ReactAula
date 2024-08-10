@@ -1,7 +1,7 @@
 export const NewComponent = () => {
   return(
     <>
-    <h2>Olá Mundo!</h2>
+    	<h2>Olá Mundo!</h2>
     </>
   )
 }
