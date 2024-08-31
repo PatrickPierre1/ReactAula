@@ -1,21 +1,37 @@
-import { SyntheticEvent, useCallback, useRef } from 'react';
+import { SyntheticEvent, useCallback, useRef, useState } from 'react';
 import s from './style.module.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Loading } from '../../components/Loading';
+import { Toast } from '../../components/Toast';
 
 export default function Login() {
-
+    const navigate = useNavigate();
     const refForm = useRef<any>();
+    const [isLoading, setIsLoading] = useState(false);
+    const [isWrong, setIsWrong] = useState(false);
 
     const submitForm = useCallback((e: SyntheticEvent) => {
         e.preventDefault();
         if (refForm.current.checkValidity()) {
+            setIsLoading(true);
             const target = e.target as typeof e.target & {
                 email: { value: string },
                 password: { value: string }
-            }
-            
-            console.log(target.email.value);
-            console.log(target.password.value);
+            };
+            axios.post("http://localhost:3001/login",
+                {
+                    email: target.email.value,
+                    password: target.password.value
+                }
+            ).then((response) => {
+                console.log(response.data);
+                navigate("/dashboard");
+            }).catch((err) => {
+                console.log(err);
+                setIsLoading(false);
+                setIsWrong(true);
+            })
 
         } else {
             refForm.current.classList.add('was-validated');
@@ -23,6 +39,10 @@ export default function Login() {
     }, []);
     return (
         <>
+            <Toast show={isWrong} message='Credenciais invalidas' onClose={() => { setIsWrong(false) }} color='danger'/>
+            <Loading
+                visible={isLoading}
+            />
             <div className={s.main}>
                 <div className={s.border}>
                     <div className='d-flex flex-column align-items-center'>
