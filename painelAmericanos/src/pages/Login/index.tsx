@@ -9,7 +9,7 @@ export default function Login() {
     const navigate = useNavigate();
     const refForm = useRef<any>();
     const [isLoading, setIsLoading] = useState(false);
-    const [isWrong, setIsWrong] = useState(false);
+    const [isToast, setIsToast] = useState(false);
 
     const submitForm = useCallback((e: SyntheticEvent) => {
         e.preventDefault();
@@ -25,12 +25,12 @@ export default function Login() {
                     password: target.password.value
                 }
             ).then((response) => {
-                console.log(response.data);
+                localStorage.setItem('americanos.token', JSON.stringify(response.data));
                 navigate("/dashboard");
             }).catch((err) => {
                 console.log(err);
                 setIsLoading(false);
-                setIsWrong(true);
+                setIsToast(true);
             })
 
         } else {
@@ -39,10 +39,9 @@ export default function Login() {
     }, []);
     return (
         <>
-            <Toast show={isWrong} message='Credenciais invalidas' onClose={() => { setIsWrong(false) }} color='danger'/>
-            <Loading
-                visible={isLoading}
-            />
+            <Toast show={isToast} message='Credenciais inválidas' onClose={() => { setIsToast(false) }} color='danger' />
+            <Loading visible={isLoading} />
+
             <div className={s.main}>
                 <div className={s.border}>
                     <div className='d-flex flex-column align-items-center'>
